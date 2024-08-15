@@ -2,82 +2,70 @@ import time
 from profiling.types.volume_profile import VolumeProfile
 
 
-# Market Profile class builds the profile of Volume and Delta
 class Profile:
+    """
+    Market Profile class builds the profile of Volume and Delta.
+    It processes each trade and updates the volume profile accordingly.
+    """
+
     def __init__(self, queue, tick_size, value_area_pct):
         self.queue = queue
         self.tick_size = tick_size
+        self.value_area_pct = value_area_pct
 
-        # Creating volume profile
-        self.volume_profile = VolumeProfile(value_area_pct)
+        # Create a VolumeProfile instance
+        self.volume_profile = VolumeProfile(value_area_pct, tick_size)
 
-        # Store information about general profile data
+        # Initialize profile information
         self.info = {
             "open_time": time.time_ns(),
             "_time": 0,
             "last_trade_ts": 0,
             "value_area_pct": value_area_pct,
-            "total_volume": 0,
-            "profile": 0,
+            "profiling": {},
         }
 
-        # The status of the profile
+        # Profile status
         self.status = "OPEN"
 
     def close(self):
-        # Set the profile status to CLOSE
+        """
+        Close the profile by setting the status to 'CLOSE'
+        and publishing the final profile update.
+        """
         self.status = "CLOSE"
-
-        # Publish an update with latest profile changes
         self.__publish_profile_update()
 
-    '''Processing each trade and build the VolumeProfile'''
+    def update_trade(self, trade):
+        """
+        Update the profile with new trade data.
 
-    def update_trade(self, t):
+        Args:
+            trade: An object representing a trade with attributes 'price', 'side', 'size', and 'timestamp'.
+        """
         try:
-            # Update the last trade timestamp
-            self.info["last_trade_ts"] = t.timestamp
+            # Update the timestamp of the last trade
+            self.info["last_trade_ts"] = trade.timestamp
 
-            # Find which bin the price belongs to
-            index = self.__round_to_bin(t.price)
+            # Update the volume profile and store the result in 'profiling'
+            self.info['profiling'] = self.volume_profile.update(trade.price, trade.side, trade.size)
 
-            # Update the volume profile
-            p = self.volume_profile.update(index, t.side, t.size)
-            self.info['profile'] = p
-            print(t.size)
-            self.info["total_volume"] += (t.size * t.price)
-
-            # Publish an update with latest profile changes
+            # Publish the updated profile
             self.__publish_profile_update()
-            # print(self.info)
-        except Exception as err:
-            print(err)
-            print('Could not build the volume profile from the update {}')
-
-    '''Returning the index of a given tick based on the price and tick size'''
-
-    def __round_to_bin(self, price):
-        try:
-            # Find the price index of a new price from its remainder
-            if price % (self.tick_size * .5) < self.tick_size * .25:
-                price_idx = (price - (price % (self.tick_size * .5)))
-                return price_idx
-            else:
-                price_idx = (price - (price % (self.tick_size * .5))) + (self.tick_size * .5)
-                return price_idx
 
         except Exception as err:
-            print(err)
-            print('Could not get the index of this {}'.format(self.tick_size))
+            print(f"Error updating profile with trade data: {err}")
 
     def __publish_profile_update(self):
+        """
+        Publish the updated profile to the queue.
+        """
         try:
-            # Get the current timestamp
-            timestamp = time.time_ns()
+            # Update the current timestamp
+            self.info["_time"] = time.time_ns()
 
-            # Update the current time of profile
-            self.info["_time"] = timestamp
-
+            # Put the updated profile in the queue
             self.queue.put(self)
+
         except KeyError as err:
-            print(err)
+            print(f"Error publishing profile update: {err}")
