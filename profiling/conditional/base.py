@@ -6,11 +6,9 @@ import pandas as pd
 
 
 class BaseCondition:
-    def __init__(self, exchange, symbol, tick_size, value_area_pct):
+    def __init__(self, tick_size, value_area_pct):
         self.id = uuid.uuid4()
 
-        self.exchange = exchange
-        self.symbol = symbol
         self.tick_size = tick_size
         self.value_area_pct = value_area_pct
         # self.feeder = ExchangeStream(exchange)
@@ -21,7 +19,7 @@ class BaseCondition:
         self.setup()
 
         self.send_queue = SimpleQueue()
-        self.profile = Profile(self.send_queue, exchange, symbol, tick_size, value_area_pct)
+        self.profile = Profile(self.send_queue, tick_size, value_area_pct)
 
     def subscribe(self):
         for profile in iter(self.send_queue.get, None):
@@ -47,7 +45,7 @@ class BaseCondition:
 
     def reset(self):
         self.profile.close()
-        self.profile = Profile(self.send_queue, self.exchange, self.symbol, self.tick_size, self.value_area_pct)
+        self.profile = Profile(self.send_queue, self.tick_size, self.value_area_pct)
 
     def update(self, p):
         return

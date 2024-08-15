@@ -4,7 +4,7 @@ from profiling.conditional.base import BaseCondition
 class ProfileVolume(BaseCondition):
 
     def __init__(self, exchange, symbol, tick_size, value_area_pct, volume):
-        super().__init__(exchange, symbol, tick_size, value_area_pct)
+        super().__init__(tick_size, value_area_pct)
 
         self.volume = volume
 
