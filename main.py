@@ -17,7 +17,7 @@ if __name__ == "__main__":
         symbol="BTCUSDT",
         exchange="test",
         value_area_pct=0.7,
-        tick_size=20,
+        tick_size=10,
         volume=5000
     )
 

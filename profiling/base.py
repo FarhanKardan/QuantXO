@@ -1,6 +1,5 @@
 import time
 from profiling.types.volume_profile import VolumeProfile
-from profiling.types.transactions import Transaction
 
 
 # Market Profile class builds the profile of Volume and Delta
@@ -11,9 +10,6 @@ class Profile:
 
         # Creating volume profile
         self.volume_profile = VolumeProfile(value_area_pct)
-
-        # Create transaction_size to differentiate based on buy/sell aggregated trade's size
-        self.transaction = Transaction(100)
 
         # Store information about general profile data
         self.info = {
@@ -44,10 +40,6 @@ class Profile:
 
             # Find which bin the price belongs to
             index = self.__round_to_bin(t.price)
-
-            # Update the transaction
-            transaction = self.transaction.update(t.side, t.size, t.timestamp)
-            self.info['transaction'] = transaction
 
             # Update the volume profile
             p = self.volume_profile.update(index, t.side, t.size)
