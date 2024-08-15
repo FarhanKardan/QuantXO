@@ -53,15 +53,6 @@ class BaseCondition:
     def trade(self, t):
         return
 
-    def instrument(self, i):
-        return
-
-    def liquidation(self, liq):
-        return
-
-    def orderbook(self, ob):
-        return
-
     def __process_trade(self):
         """
             Data Provider

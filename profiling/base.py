@@ -46,6 +46,7 @@ class Profile:
             self.info['profile'] = p
             self.info["total_volume"] += t.size
 
+
             # Publish an update with latest profile changes
             self.__publish_profile_update()
             print(self.info)
