@@ -1,4 +1,4 @@
-from core.profile.calculation import poc, value_area, edge
+from profiling.calculation import poc, value_area, edge
 
 """
 process the raw profile data for creating
