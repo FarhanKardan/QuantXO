@@ -1,0 +1,12 @@
+binance:
+  api_key: 'rxirPy024UMkqjXGc7qWlD2euuxFMgQ2FZlWeSESSFSS8L0Q8mp5TeCvTX5SPZGX'
+  api_secret: 'TfZfIqudcTova5TZXwDV7O3VUaHpyNmpoiXJDfHgtsYwK4m0ttxlmaWSiVA6cuJ0'
+
+influxdb:
+  url: "https://us-east-1-1.aws.cloud2.influxdata.com"
+  token: "40hJ_0casoX8LNruMPf2hZa0vEvZL-6szLj-NpKEP4sODnzHlzYESpCgaohzji3z-aYBCK95HSDWmmzMrK8C8g=="
+  org: "farhan.kardan78@gmail.com"
+  bucket: "Candles"
+
+
+
