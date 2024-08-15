@@ -1,8 +1,17 @@
 from log_handler.logger import Logger
 import pandas as pd
-from profiling.base import Profile
 from profiling.conditional.volume.volume import ProfileVolume
 from queue import Queue
+from profiling.base import Profile
+
+
+class Trade:
+    def __init__(self, price, side, size, timestamp):
+        self.price = price
+        self.side = side
+        self.size = size
+        self.timestamp = timestamp
+
 
 if __name__ == "__main__":
     # set logger and data downloader
@@ -12,16 +21,14 @@ if __name__ == "__main__":
     df = df[:1000]
 
     q = Queue()
-
-    profiler = ProfileVolume(
-        symbol="BTCUSDT",
-        exchange="test",
+    profiler = Profile(
         value_area_pct=0.7,
-        tick_size=10,
-        volume=5000
+        tick_size=20,
+        queue=q,
     )
 
     for _, row in df.iterrows():
-        profiler.trade(row)
-        # print('\n')
-
+        trade = Trade(price=row['price'], side=row['side'], size=row['size'], timestamp=row['timestamp'])
+        profiler.update_trade(trade)
+        print(profiler.info, '\n')
+        break

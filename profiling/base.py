@@ -19,7 +19,6 @@ class Profile:
             "value_area_pct": value_area_pct,
             "total_volume": 0,
             "profile": 0,
-            "transaction": 0,
         }
 
         # The status of the profile
@@ -33,6 +32,7 @@ class Profile:
         self.__publish_profile_update()
 
     '''Processing each trade and build the VolumeProfile'''
+
     def update_trade(self, t):
         try:
             # Update the last trade timestamp
@@ -44,17 +44,18 @@ class Profile:
             # Update the volume profile
             p = self.volume_profile.update(index, t.side, t.size)
             self.info['profile'] = p
-            self.info["total_volume"] += t.size
-
+            print(t.size)
+            self.info["total_volume"] += (t.size * t.price)
 
             # Publish an update with latest profile changes
             self.__publish_profile_update()
-            print(self.info)
+            # print(self.info)
         except Exception as err:
             print(err)
             print('Could not build the volume profile from the update {}')
 
     '''Returning the index of a given tick based on the price and tick size'''
+
     def __round_to_bin(self, price):
         try:
             # Find the price index of a new price from its remainder
