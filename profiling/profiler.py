@@ -1,5 +1,5 @@
 import time
-from profiling.types.volume_profile import VolumeProfile
+from profiling.clusters.volume_profile import VolumeProfile
 
 
 class Profile:

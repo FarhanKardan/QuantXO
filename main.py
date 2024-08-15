@@ -1,8 +1,8 @@
 from log_handler.logger import Logger
 import pandas as pd
-from profiling.conditional.volume.volume import ProfileVolume
+from profiling.conditions.volume.volume import ProfileVolume
 from queue import Queue
-from profiling.base import Profile
+from profiling.profiler import Profile
 
 
 class Trade:

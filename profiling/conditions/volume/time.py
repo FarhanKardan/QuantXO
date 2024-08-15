@@ -1,10 +1,10 @@
-from core.profile.conditional.base import BaseCondition
+from profiling.conditions.base import BaseCondition
 from datetime import datetime
 
 
 class ProfileTime(BaseCondition):
-    def __init__(self, exchange, symbol, tick_size, value_area_pct, duration):
-        super().__init__(exchange, symbol, tick_size, value_area_pct)
+    def __init__(self, tick_size, value_area_pct, duration):
+        super().__init__(tick_size, value_area_pct)
 
         self.last_reset_time = 0
         self.duration = duration
@@ -21,12 +21,4 @@ class ProfileTime(BaseCondition):
         # update profile
         self.profile.update_trade(t)
 
-    def instrument(self, i):
-        self.profile.update_instrument(i)
-
-    def liquidation(self, liq):
-        self.profile.update_liquidation(liq)
-
-    def orderbook(self, o):
-        return
 

@@ -1,4 +1,4 @@
-from profiling.conditional.base import BaseCondition
+from profiling.conditions.base import BaseCondition
 
 
 class ProfileVolume(BaseCondition):

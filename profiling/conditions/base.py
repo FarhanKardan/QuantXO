@@ -1,6 +1,6 @@
 import uuid
 from threading import Thread
-from profiling.base import Profile
+from profiling.profiler import Profile
 from queue import SimpleQueue
 import pandas as pd
 
