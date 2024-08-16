@@ -26,13 +26,11 @@ if __name__ == "__main__":
     profiler = DurationCondition(
         value_area_pct=0.7,
         tick_size=100,
-        duration_threshold=30,
+        duration_threshold=5,
     )
 
     for i, row in df.iterrows():
         trade = Trade(price=row['price'], side=row['side'], size=row['size'], timestamp=row['timestamp'])
         profiler.check(trade)
-        # if profiler.info['profiling']['total_volume'] > 5000000:
-        #     print("Each tick update", profiler.info,'\n')
-        #     profiler.reset_info()
+
 
