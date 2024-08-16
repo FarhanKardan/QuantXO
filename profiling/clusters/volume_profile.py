@@ -11,6 +11,7 @@ class VolumeProfile:
         self.tick_size = tick_size
 
         self.info = {
+            "total_volume": 0,
             "delta": 0,
             "trade_count": 0,
             "buy_trade_count": 0,
@@ -20,7 +21,6 @@ class VolumeProfile:
             "poc": 0,
             "poc_idx": 0,
             "poc_volume": 0,
-            "total_volume": 0,
             "bid_volume": 0,
             "ask_volume": 0,
             "profiles": {}
