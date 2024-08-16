@@ -12,7 +12,7 @@ class DurationCondition(Profile):
 
         duration_seconds = self.info['last_trade_ts'] - self.info['first_trade_ts']
         if duration_seconds >= self.duration_threshold:
-            print(f"Duration condition met: Duration: {duration_seconds:.2f} seconds, Profile Info: {self.info}")
+            # print(f"Duration condition met: Duration: {duration_seconds:.2f} seconds, Profile Info: {self.info}")
             self.reset()
 
     def reset(self):

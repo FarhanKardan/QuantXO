@@ -1,0 +1,29 @@
+{
+    "first_trade_ts": 1723161666.0556,
+    "last_trade_ts": 1723161673.697,
+    "profiling": {
+        "delta": 981400.475599999,
+        "trade_count": 632,
+        "buy_trade_count": 334,
+        "sell_trade_count": 298,
+        "val": 61550,
+        "vah": 61550,
+        "poc": 61550,
+        "poc_idx": 0,
+        "poc_volume": 5005271.309999998,
+        "total_volume": 5005271.309999998,
+        "bid_volume": 2993335.892799997,
+        "ask_volume": 1993415.4289999995,
+        "profiles": {
+            "61550.0": {
+                "volume": 5005271.309999998,
+                "bid": 2993335.892799997,
+                "ask": 2011935.4171999996,
+                "delta": 981400.475599999,
+                "t_count": 632,
+                "t_b_count": 334,
+                "t_a_count": 298
+            }
+        }
+    }
+}
