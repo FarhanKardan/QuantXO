@@ -69,3 +69,16 @@ class Profile:
 
         except KeyError as err:
             print(f"Error publishing profile update: {err}")
+
+    def reset_info(self):
+        """
+        Reset the profile information to its initial state.
+        """
+        self.info = {
+            "open_time": time.time_ns(),
+            "_time": 0,
+            "last_trade_ts": 0,
+            "value_area_pct": self.value_area_pct,
+            "profiling": {},
+        }
+        self.volume_profile.reset_info()

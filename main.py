@@ -3,7 +3,7 @@ import pandas as pd
 from profiling.conditions.volume.volume import ProfileVolume
 from queue import Queue
 from profiling.profiler import Profile
-
+import time
 
 class Trade:
     def __init__(self, price, side, size, timestamp):
@@ -19,17 +19,21 @@ if __name__ == "__main__":
     # fetcher = BybitTickFetcher(logger=logger_instance).run(start_date=datetime(2024, 8, 9), end_date=datetime(2024, 8, 12 ))
     df = pd.read_csv("/Users/farhan/Desktop/Data/BTCUSDT/BTCUSDT2024-08-09.csv.gz", compression="gzip")
     df['size'] = df['price'] * df['size']
-    df = df[:100]
+    df = df[:401]
 
     q = Queue()
     profiler = Profile(
         value_area_pct=0.7,
-        tick_size=1,
+        tick_size=100,
         queue=q,
     )
 
-    for _, row in df.iterrows():
+    for i, row in df.iterrows():
         trade = Trade(price=row['price'], side=row['side'], size=row['size'], timestamp=row['timestamp'])
         profiler.update_trade(trade)
-        print(profiler.info, '\n')
-        # break
+        # print("Each tick update", profiler.info)
+
+        if profiler.info['profiling'].get('trade_count', 0) % 100 == 0:
+            print(profiler.info, '\n')
+            profiler.reset_info()
+            # print("reset point", profiler.info)

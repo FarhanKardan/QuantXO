@@ -130,3 +130,27 @@ class VolumeProfile:
                 return price - remainder + (self.tick_size * 0.5)
         except Exception as err:
             print(f"Error rounding price {price} to bin: {err}")
+
+    def _initialize_info(self):
+        """Initialize or reset the profiling information."""
+        self.info = {
+            "delta": 0,
+            "trade_count": 0,
+            "buy_trade_count": 0,
+            "sell_trade_count": 0,
+            "val": 0,
+            "vah": 0,
+            "poc": 0,
+            "poc_idx": 0,
+            "poc_volume": 0,
+            "total_volume": 0,
+            "bid_volume": 0,
+            "ask_volume": 0,
+            "profiles": {}
+        }
+
+    def reset_info(self):
+        """Reset the profiling information and clear the profile and volume cache."""
+        self.profile = {}
+        self.volume_cache = pd.Series(dtype=object)
+        self._initialize_info()
