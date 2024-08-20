@@ -5,8 +5,7 @@ from profiling.conditions.delta import DeltaCondition
 from profiling.conditions.time import DurationCondition
 from queue import Queue
 from profiling.profiler import Profile
-import csv
-import json
+
 
 class Trade:
     def __init__(self, price, side, size, timestamp):
@@ -22,27 +21,16 @@ if __name__ == "__main__":
     # fetcher = BybitTickFetcher(logger=logger_instance).run(start_date=datetime(2024, 8, 9), end_date=datetime(2024, 8, 12 ))
     df = pd.read_csv("/Users/farhan/Desktop/Data/BTCUSDT/BTCUSDT2024-08-09.csv.gz", compression="gzip")
     df['size'] = df['price'] * df['size']
-    df = df[:4007]
-
-
-    # with open("profile_data.csv", mode="w", newline='') as f:
-    #     writer = csv.DictWriter(f)
-
-
+    # df = df[:4007]
 
     profiler = VolumeCondition(
         value_area_pct=0.7,
         tick_size=100,
-        volume_threshold=5000000,
-    )
-
-
+        volume_threshold=5_000_000)
 
     for i, row in df.iterrows():
         trade = Trade(price=row['price'], side=row['side'], size=row['size'], timestamp=row['timestamp'])
         profiler.check(trade)
-        # data = json.dumps(profiler.info)
-        # print(profiler.info, '\n')
-        # writer.writerow(data)
+
 
 

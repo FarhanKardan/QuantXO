@@ -1,15 +1,18 @@
-from profiling.profiler import Profile
-import csv
 import json
 import numpy as np
+from profiling.profiler import Profile
+import os
+import csv
 
-def write_json(data, filename="profiles.json"):
+
+def write_csv(data, filename="profiles.csv"):
+    # os.remove("/Users/farhan/Desktop/QuantXO/profiles.csv")
     """
-    Writes a dictionary to a JSON file, converting numpy data types to native Python types.
+    Append a dictionary to a CSV file as a new row, converting numpy data types to native Python types.
 
     Args:
         data: Dictionary to be written to the file.
-        filename: Name of the JSON file.
+        filename: Name of the CSV file.
     """
     def convert_numpy(obj):
         if isinstance(obj, (np.int64, np.int32)):
@@ -17,12 +20,29 @@ def write_json(data, filename="profiles.json"):
         if isinstance(obj, (np.float64, np.float32)):
             return float(obj)
         if isinstance(obj, np.ndarray):
-            return obj.tolist()  # Convert numpy arrays to lists
-        raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+            return obj.tolist()
+        return obj  # Return the object as-is if it's not a numpy type
 
-    with open(filename, "w") as f:
-        json.dump(data, f, indent=4, default=convert_numpy)
+    # Convert data to a format suitable for CSV
+    flattened_data = {
+        key: convert_numpy(value) for key, value in data.items()
+    }
 
+    # Open the CSV file in append mode and write the row
+    with open(filename, mode="a", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=flattened_data.keys())
+
+        # Write the header only if the file is empty (first time writing)
+        if f.tell() == 0:
+            writer.writeheader()
+
+        writer.writerow(flattened_data)
+
+def write_json(data, filename="profiles.json"):
+    os.remove("/Users/farhan/Desktop/QuantXO/profiles.json")
+    with open(filename, "a") as f:  # Open in append mode
+        json.dump(data, f, default=int)
+        f.write("\n")
 
 
 class VolumeCondition(Profile):
@@ -41,9 +61,9 @@ class VolumeCondition(Profile):
 
         if total_volume >= self.volume_threshold:
             print(f"Volume condition met: Trade Size: {total_volume}, Profile Info: {self.info}")
-            write_json(self.info)
+            write_csv(self.info)
             self.reset()
 
     def reset(self):
         super().reset_info()
-        print("Profile information has been reset.")
+        # print("Profile information has been reset.")

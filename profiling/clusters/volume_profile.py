@@ -107,7 +107,7 @@ class VolumeProfile:
     def _calculate_poc(self):
         """Calculate the Point of Control (POC)."""
         poc, poc_volume, poc_idx = POC.get_idx(self.volume_cache)
-        self.info.update({"poc": poc, "poc_volume": poc_volume, "poc_idx": poc_idx})
+        self.info.update({"poc": int(poc), "poc_volume": int(poc_volume), "poc_idx": int(poc_idx)})
 
     def _calculate_value_area(self):
         """Calculate the Value Area Low (VAL) and Value Area High (VAH)."""
@@ -118,7 +118,7 @@ class VolumeProfile:
             self.info['poc_volume'],
             self.info['poc_idx']
         )
-        self.info.update({"val": val, "vah": vah})
+        self.info.update({"val": int(val), "vah": int(vah)})
 
     def __round_to_bin(self, price):
         """Round the price to the nearest tick size bin."""
