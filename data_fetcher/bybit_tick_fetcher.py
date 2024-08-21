@@ -2,19 +2,14 @@ import requests
 from datetime import timedelta
 import os
 
-class BybitTickFetcher:
-    def __init__(self, logger, base_uri="https://public.bybit.com/trading/BTCUSDT", base_directory="/Users/farhan/Desktop/Data/BTCUSDT/"):
-        """
-        Initialize the BybitTickFetcher with a logger.
 
-        :param logger: Logger instance for logging.
-        :param base_uri: Base URI for the API.
-        :param base_directory: Directory to save files.
-        """
+class BybitTickFetcher:
+    def __init__(self, logger, base_uri="https://public.bybit.com/trading/BTCUSDT",
+                 base_directory="/Users/farhan/Desktop/Data/BTCUSDT/"):
+
         self.logger = logger
         self.base_uri = base_uri
         self.base_directory = base_directory
-        # Ensure the directory exists
         os.makedirs(self.base_directory, exist_ok=True)
 
     def get_requests(self, path):
