@@ -1,5 +1,6 @@
 from collections import deque
 from datetime import datetime, timedelta
+import pandas as pd
 
 
 class Candle:
@@ -48,7 +49,6 @@ class CandleGenerator:
             self.candles.append(self.current_candle)
             self._create_new_candle(price, volume, timestamp)
         else:
-            # Update the current candle
             self.current_candle.high_price = max(self.current_candle.high_price, price)
             self.current_candle.low_price = min(self.current_candle.low_price, price)
             self.current_candle.close_price = price
@@ -62,3 +62,24 @@ class CandleGenerator:
         if self.current_candle:
             self.candles.append(self.current_candle)
             self.current_candle = None
+
+    def convert_candle_into_csv(self, filename="candles.csv"):
+        # Convert deque of Candle objects to a list of dictionaries
+        candle_data = [{
+            "open_price": candle.open_price,
+            "high_price": candle.high_price,
+            "low_price": candle.low_price,
+            "close_price": candle.close_price,
+            "volume": candle.volume,
+            "start_time": candle.start_time,
+            "end_time": candle.end_time
+        } for candle in self.candles]
+
+        # Convert the list of dictionaries into a Pandas DataFrame
+        df = pd.DataFrame(candle_data)
+
+        # Save the DataFrame to a CSV file
+        df.to_csv(filename, index=False)
+
+        print(f"Candles successfully saved to {filename}")
+

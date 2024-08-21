@@ -1,4 +1,3 @@
-import time
 from profiling.clusters.volume_profile import VolumeProfile
 
 

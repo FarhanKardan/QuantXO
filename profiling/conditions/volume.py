@@ -6,14 +6,6 @@ import csv
 
 
 def write_csv(data, filename="profiles.csv"):
-    # os.remove("/Users/farhan/Desktop/QuantXO/profiles.csv")
-    """
-    Append a dictionary to a CSV file as a new row, converting numpy data types to native Python types.
-
-    Args:
-        data: Dictionary to be written to the file.
-        filename: Name of the CSV file.
-    """
     def convert_numpy(obj):
         if isinstance(obj, (np.int64, np.int32)):
             return int(obj)
@@ -38,19 +30,26 @@ def write_csv(data, filename="profiles.csv"):
 
         writer.writerow(flattened_data)
 
-def write_json(data, filename="profiles.json"):
-    os.remove("/Users/farhan/Desktop/QuantXO/profiles.json")
-    with open(filename, "a") as f:  # Open in append mode
-        json.dump(data, f, default=int)
-        f.write("\n")
+
+def remove_and_flatten_dfs(test_dict, rem_keys):
+    result_dict = {}
+
+    def dfs(curr_dict, rem_keys):
+        for key, value in curr_dict.items():
+            if key in rem_keys:
+                continue
+            if isinstance(value, dict):
+                dfs(value, rem_keys)
+            else:
+                result_dict[key] = value
+
+    dfs(test_dict, rem_keys)
+    return result_dict
+
+
 
 
 class VolumeCondition(Profile):
-    """
-    Condition to check if total volume exceeds a threshold.
-    Inherits from Profile and uses its methods to process trades and check volume conditions.
-    """
-
     def __init__(self, tick_size, value_area_pct, volume_threshold):
         super().__init__(tick_size, value_area_pct)
         self.volume_threshold = volume_threshold
@@ -60,10 +59,10 @@ class VolumeCondition(Profile):
         total_volume = self.info['profiling'].get('total_volume', 0)
 
         if total_volume >= self.volume_threshold:
+            self.info = remove_and_flatten_dfs(self.info, "profiles")
             print(f"Volume condition met: Trade Size: {total_volume}, Profile Info: {self.info}")
             write_csv(self.info)
             self.reset()
 
     def reset(self):
         super().reset_info()
-        # print("Profile information has been reset.")
