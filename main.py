@@ -1,11 +1,8 @@
 from log_handler.logger import Logger
-import pandas as pd
 from profiling.conditions.volume import VolumeCondition
-from profiling.conditions.delta import DeltaCondition
-from profiling.conditions.time import DurationCondition
 from profiling.clusters.candles import CandleGenerator
-from queue import Queue
-from profiling.profiler import Profile
+from data_handler.data_reader.data_reader import DataReader
+from datetime import datetime
 
 
 class Trade:
@@ -19,8 +16,8 @@ class Trade:
 if __name__ == "__main__":
     # set logger and data downloader
     logger_instance = Logger().get_logger()
-    # fetcher = BybitTickFetcher(logger=logger_instance).run(start_date=datetime(2024, 8, 9), end_date=datetime(2024, 8, 12 ))
-    df = pd.read_csv("/Users/farhan/Desktop/Data/BTCUSDT/BTCUSDT2024-08-09.csv.gz", compression="gzip")
+    reader = DataReader(dir_path="/Users/farhan/Desktop/Data/BTCUSDT/BTCUSDT")
+    df = reader.daterange(datetime(2024, 8, 1), datetime(2024, 8, 3))
     df['size'] = df['price'] * df['size']
     # df = df[:19000]
 
@@ -29,10 +26,10 @@ if __name__ == "__main__":
     profiler = VolumeCondition(
         value_area_pct=0.7,
         tick_size=100,
-        volume_threshold=5_000_000)
+        volume_threshold=10_000_000)
 
     for i, row in df.iterrows():
         candle_generator.process_tick(price=row['price'], volume=row['size'], timestamp=row['timestamp'])
         trade = Trade(price=row['price'], side=row['side'], size=row['size'], timestamp=row['timestamp'])
-        # profiler.check(trade)
+        profiler.check(trade)
     candle_generator.convert_candle_into_csv()

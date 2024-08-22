@@ -1,45 +1,36 @@
+# hello_world_dag.py
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
-from datetime import datetime, timedelta
-import requests
+from datetime import datetime
+from datetime import timedelta
 
-# Define a function to download the file
-def download_file(url, save_path):
-    response = requests.get(url)
-    with open(save_path, 'wb') as file:
-        file.write(response.content)
-    print(f"File downloaded to {save_path}")
-
-# Define the default arguments
+# Define the default arguments for the DAG
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2023, 8, 21),
-    'email_on_failure': False,
-    'email_on_retry': False,
+    'start_date': datetime(2023, 1, 1),
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
 }
 
 # Define the DAG
-with DAG(
-    'download_file_dag',
+dag = DAG(
+    'hello_world',
     default_args=default_args,
-    description='A simple DAG to download a file',
+    description='A simple hello world DAG',
     schedule_interval=timedelta(days=1),
-    catchup=False,
-) as dag:
+)
 
-    # Define the task using PythonOperator
-    download_task = PythonOperator(
-        task_id='download_file',
-        python_callable=download_file,
-        op_kwargs={
-            'url': 'https://example.com/file.zip',
-            'save_path': '/path/to/save/file.zip',
-        },
-    )
+# Define the Python function to run
+def print_hello_world():
+    print("Hello, world!")
 
-    # Specify the task order (in this simple case, just the download task)
-    download_task
+# Define the task using PythonOperator
+task = PythonOperator(
+    task_id='print_hello',
+    python_callable=print_hello_world,
+    dag=dag,
+)
 
+# Set the task dependencies
+task

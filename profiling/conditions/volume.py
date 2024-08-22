@@ -47,8 +47,6 @@ def remove_and_flatten_dfs(test_dict, rem_keys):
     return result_dict
 
 
-
-
 class VolumeCondition(Profile):
     def __init__(self, tick_size, value_area_pct, volume_threshold):
         super().__init__(tick_size, value_area_pct)
@@ -60,6 +58,7 @@ class VolumeCondition(Profile):
 
         if total_volume >= self.volume_threshold:
             self.info = remove_and_flatten_dfs(self.info, "profiles")
+            print(self.info)
             print(f"Volume condition met: Trade Size: {total_volume}, Profile Info: {self.info}")
             write_csv(self.info)
             self.reset()
