@@ -20,7 +20,7 @@ if __name__ == "__main__":
     reader = DataReader(dir_path="/Users/farhan/Desktop/Data/BTCUSDT/BTCUSDT")
     df = reader.daterange(datetime(2024, 8, 1), datetime(2024, 8, 3))
     df['size'] = df['price'] * df['size']
-    df = df[:1000000]
+    df = df[:100000]
 
     s = time.time()
     candle_generator = CandleGenerator(interval_seconds=60)
@@ -28,7 +28,8 @@ if __name__ == "__main__":
     profiler = VolumeCondition(
         value_area_pct=0.7,
         tick_size=100,
-        volume_threshold=10_000_000)
+        volume_threshold=10_000_000,
+        csv_file_path="volume_profile.csv")
 
     for i, row in df.iterrows():
         # candle_generator.process_tick(price=row['price'], volume=row['size'], timestamp=row['timestamp'])
