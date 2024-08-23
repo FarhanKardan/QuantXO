@@ -1,39 +1,40 @@
-"""
-    Calculating poc data
-"""
-
 import numpy as np
 
 
 class POC:
-    # find the index of the maximum closest to middle
     @staticmethod
     def get_idx(profile):
-        # get the values of profile
+        # Convert profile to a NumPy array and index array
         array = profile.values
+        index = profile.index
 
         if len(array) == 0:
             return 0, 0, 0
 
-        # find candidate maxima
-        maxima_idxs = np.argwhere(array == np.amax(array))[:, 0]
-        if len(maxima_idxs) == 1:
-            poc_idx = maxima_idxs[0]
-            poc = profile.index[poc_idx]
-            poc_v = profile.iloc[poc_idx]
+        # Find the index of the maximum value
+        max_value = np.max(array)
+        maxima_idxs = np.where(array == max_value)[0]
 
-            return poc, poc_v, poc_idx
-        elif len(maxima_idxs) <= 1:
+        if len(maxima_idxs) == 0:
             return 0, 0, 0
 
-        # Find the distances from the midpoint to find
-        # the maxima with the least distance
+        # If only one maximum value, return its details
+        if len(maxima_idxs) == 1:
+            poc_idx = maxima_idxs[0]
+            poc = index[poc_idx]
+            poc_v = array[poc_idx]
+            return poc, poc_v, poc_idx
+
+        # Find the midpoint of the array
         midpoint = len(array) / 2
-        v_norm = np.vectorize(np.linalg.norm)
-        maximum_idx = np.argmin(v_norm(maxima_idxs - midpoint))
 
-        poc_idx = maxima_idxs[maximum_idx]
-        poc = profile.index[poc_idx]
-        poc_v = profile.iloc[poc_idx]
+        # Compute distances from the midpoint
+        distances = np.abs(maxima_idxs - midpoint)
 
-        return poc, poc_v, poc_idx
+        # Find the index of the minimum distance
+        closest_maxima_idx = maxima_idxs[np.argmin(distances)]
+
+        poc = index[closest_maxima_idx]
+        poc_v = array[closest_maxima_idx]
+
+        return poc, poc_v, closest_maxima_idx

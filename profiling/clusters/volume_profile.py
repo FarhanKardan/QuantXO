@@ -4,11 +4,12 @@ from profiling.calculation.value_area import ValueArea
 
 
 class VolumeProfile:
-    def __init__(self, value_area_pct, tick_size):
+    def __init__(self, value_area_pct, tick_size, fill_profiles=False):
         self.profile = {}
         self.value_area_pct = value_area_pct
         self.volume_cache = pd.Series(dtype=object)
         self.tick_size = tick_size
+        self.fill_profiles = fill_profiles  # Flag to control filling the profiles field
 
         self.info = {
             "total_volume": 0,
@@ -37,7 +38,11 @@ class VolumeProfile:
             self._calculate_poc()
             self._calculate_value_area()
 
-            self.info['profiles'] = self.profile
+            if self.fill_profiles:
+                self.info['profiles'] = self.profile
+            else:
+                self.info.pop('profiles', None)
+
             return self.info
 
         except Exception as err:

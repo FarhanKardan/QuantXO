@@ -54,7 +54,7 @@ class VolumeCondition(Profile):
 
     def check(self, trade):
         self.process_trade(trade)
-        total_volume = self.info['profiling'].get('total_volume', 0)
+        total_volume = self.info['profiling']['total_volume']
 
         if total_volume >= self.volume_threshold:
             self.info = remove_and_flatten_dfs(self.info, "profiles")
