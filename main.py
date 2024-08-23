@@ -4,13 +4,9 @@ from profiling.clusters.candles import CandleGenerator
 from data_handler.data_reader.data_reader import DataReader
 from datetime import datetime
 import time
+from profiling.utils.types import Trade
+from profiling.utils.candle_resampler import TickResampler
 
-class Trade:
-    def __init__(self, price, side, size, timestamp):
-        self.price = price
-        self.side = side
-        self.size = size
-        self.timestamp = timestamp
 
 
 if __name__ == "__main__":
@@ -20,21 +16,23 @@ if __name__ == "__main__":
     reader = DataReader(dir_path="/Users/farhan/Desktop/Data/BTCUSDT/BTCUSDT")
     df = reader.daterange(datetime(2024, 8, 1), datetime(2024, 8, 3))
     df['size'] = df['price'] * df['size']
-    df = df[:100000]
+    print(df)
+    # df = df[:100000]
+
+    # Creating Candles
+    candle_df = TickResampler(df).resample_to_candles(timeframe="1min")
+    candle_df.to_csv("candle_1m.csv")
+    print(candle_df)
 
     s = time.time()
-    candle_generator = CandleGenerator(interval_seconds=60)
-
-    profiler = VolumeCondition(
-        value_area_pct=0.7,
-        tick_size=100,
-        volume_threshold=10_000_000,
-        csv_file_path="volume_profile.csv")
-
-    for i, row in df.iterrows():
-        # candle_generator.process_tick(price=row['price'], volume=row['size'], timestamp=row['timestamp'])
-        trade = Trade(price=row['price'], side=row['side'], size=row['size'], timestamp=row['timestamp'])
-        profiler.check(trade)
-    # print(candle_generator.convert_candles_to_dataframe())
+    # profiler = VolumeCondition(
+    #     value_area_pct=0.7,
+    #     tick_size=100,
+    #     volume_threshold=10_000_000,
+    #     csv_file_path="volume_profile.csv")
+    #
+    # for i, row in df.iterrows():
+    #     trade = Trade(price=row['price'], side=row['side'], size=row['size'], timestamp=row['timestamp'])
+    #     profiler.check(trade)
     print(time.time() - s)
 
