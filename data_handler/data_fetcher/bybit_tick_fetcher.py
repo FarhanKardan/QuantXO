@@ -17,6 +17,7 @@ class BybitTickFetcher:
     def get_requests(self, path):
         url = f"{self.base_uri}/{path}"
         try:
+            print("download start for", url)
             response = requests.get(url)
             response.raise_for_status()  # Raise HTTPError for bad responses
             return response
@@ -41,13 +42,8 @@ class BybitTickFetcher:
 
     def run(self, start_date, end_date):
         dates = [start_date + timedelta(days=i) for i in range((end_date - start_date).days + 1)]
-        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-            futures = [executor.submit(self.fetch_and_write, date) for date in dates]
-            for future in as_completed(futures):
-                try:
-                    future.result()  # Handle exceptions from fetch_and_write if needed
-                except Exception as e:
-                    self.logger.error(f"Exception occurred: {e}")
+        for date in dates:
+            self.fetch_and_write(date)
 
 
 # Example usage:
@@ -56,6 +52,6 @@ if __name__ == "__main__":
     logger = logging.getLogger(__name__)
 
     fetcher = BybitTickFetcher(logger)
-    start_date = datetime(2023, 1, 1)
-    end_date = datetime(2023, 1, 10)
+    start_date = datetime(2023, 1, 23)
+    end_date = datetime(2023, 1, 30)
     fetcher.run(start_date, end_date)
