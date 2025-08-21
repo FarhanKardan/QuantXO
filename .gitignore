@@ -167,3 +167,6 @@ candle_1m.csv
 
 # Airflow
 airflow/
+
+# Execution directory
+execution/
